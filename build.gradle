@@ -15,6 +15,13 @@ buildscript {
     }
 }
 
+// Start: 1. Add this for Sonar
+plugins {
+  id "org.sonarqube" version "2.6.2"
+  id "jacoco"
+}
+// Ends: 1. Add this for Sonar
+
 apply plugin: 'java'
 
 apply plugin: 'eclipse-wtp'
@@ -71,3 +78,18 @@ jar {
     baseName = "spring-music"
     version = "" // omit the version from the war file name
 }
+
+// Starts: 2. Adding sonarqube config block
+sonarqube {
+  properties {
+      property "sonar.projectKey", "${project.name}"
+      property "sonar.projectName", "${project.name}"
+      property "sonar.projectDescription", "sonar: ${project.name}"
+      property "sonar.projectVersion", "${project.buildNumber}"
+      property "sonar.exclusions", "${project.sonarExclusions}"
+
+      // Jacoco related properties
+      // property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
+  }
+}
+// Ends: 2. Adding sonarqube config block
