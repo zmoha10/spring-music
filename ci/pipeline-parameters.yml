@@ -26,7 +26,7 @@ sonar-server-url: https://sonar.apps.np.stratus.albertsons.com
 sonar-key: ((sonar-token))
 
 # Task Settings
-componenttest-enabled:  true
+componenttest-enabled:  false
 integrationtest-enabled:  true
 codecoverage-enabled:  true
 vulnerability-enabled:  true
