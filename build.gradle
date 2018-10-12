@@ -93,3 +93,9 @@ sonarqube {
   }
 }
 // Ends: 2. Adding sonarqube config block
+
+task printName {
+  doLast {
+    println "${project.name}"
+  }
+}
