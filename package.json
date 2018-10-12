@@ -1,0 +1,19 @@
+{
+  "name": "jmeter-reports",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ContentServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmuha03/jmeter-reports.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmuha03/jmeter-reports/issues"
+  },
+  "homepage": "https://github.com/hmuha03/jmeter-reports#readme"
+}

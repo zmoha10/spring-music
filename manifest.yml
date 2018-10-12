@@ -1,0 +1,4 @@
+---
+applications:
+- name: jmeter-reports
+  command: node ContentServer.js
