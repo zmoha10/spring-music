@@ -1,0 +1,32 @@
+# DO NOT PUT USERNAMES, PASSWORDS, KEYS, or CERTIFICATES in any files that get checked into github
+
+domain:                 albertsons # This should be the domain for the app, or the team name, or ...
+app-name:               spring-music # Code name for the app. Examples: "tiger", "lion", "octopus", "sparrow", "eagle", "cobra" or "bear"
+artifact_id:            spring-music # name of the artifact that should be generated. Examples: emju-offers
+packaging:              jar #type of the artifact. Examples: jar, zip, war, tar.gz
+real-app-name:          spring-music # Examples: "emju-offers", "order-ahead" "meal-planning", "loyalty"
+build-tool:             gradle # Accepted values: "maven", "gradle"
+healthcheck-endpoint:    /health
+
+# GIT (Source Control) Information:
+git-uri:                git@github.com:zmoha10/spring-music.git  # Example: "git@github.com:J4U-Nimbus/dino-octopus.git"
+git-branch:             master
+git-private-read-key:   ((git-read-key.private_key)) #<<<--- DO NOT CHANGE
+git-private-write-key:  ((git-write-key.private_key))  #<<<--- DO NOT CHANGE
+
+# Commons CI GIT (Source Control) Information:
+git-common-ci-branch:             gradleSonarPlugin
+git-common-ci-private-read-key:   ((git-common-ci-read-key.private_key)) #<<<--- DO NOT CHANGE
+
+# non prod configs Information:
+git-nonprod-config-private-read-key:   ((git-nonprod-config-read-key.private_key)) #<<<--- DO NOT CHANGE
+
+# Sonarqube Information:
+sonar-server-url: https://sonar.apps.np.stratus.albertsons.com
+sonar-key: ((sonar-token))
+
+# Task Settings
+componenttest-enabled:  true
+integrationtest-enabled:  true
+codecoverage-enabled:  true
+vulnerability-enabled:  true

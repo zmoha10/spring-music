@@ -1,0 +1,48 @@
+---
+resources:
+  - name: source-code
+    type: git
+    source:
+      uri: ((git-uri))
+      branch: ((git-branch))
+      private_key: ((git-private-read-key))
+  - name: common-ci
+    type: git
+    source:
+      uri: git@github.com:J4U-Nimbus/stratus-pcf-concourse-pipeline-template.git
+      branch: ((git-common-ci-branch))
+      private_key: ((git-common-ci-private-read-key))
+  - name: version
+    type: semver
+    source:
+      driver: git
+      uri: ((git-uri))
+      branch: version
+      file: version
+      private_key: ((git-private-write-key))
+
+jobs:
+  - name: build-publish
+    serial: true
+    plan:
+      - aggregate:
+        - get: source-code
+          trigger: true
+        - get: common-ci
+        - get: version
+          params: { bump: patch }
+      - task: build-unittest
+        file: common-ci/ci/tasks/((build-tool))/build-unittest.yml
+      - task: componenttest
+        file: common-ci/ci/tasks/((build-tool))/componenttest.yml
+        params:
+          TASK_ENABLED: ((componenttest-enabled))
+      - task: codecoverage
+        file: common-ci/ci/tasks/((build-tool))/codecoverage.yml
+        params:
+          TASK_ENABLED: ((codecoverage-enabled))
+          SONAR_SERVER_URL: ((sonar-server-url))
+          SONAR_TOKEN: ((sonar-key))
+      - put: version
+        params:
+          file: version/version
