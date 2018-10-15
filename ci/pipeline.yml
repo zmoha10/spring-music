@@ -38,12 +38,6 @@ jobs:
         - get: version
           params: { bump: patch }
         - get: reports
-      - task: build-unittest
-        file: common-ci/ci/tasks/((build-tool))/build-unittest.yml
-      - task: componenttest
-        file: common-ci/ci/tasks/((build-tool))/componenttest.yml
-        params:
-          TASK_ENABLED: ((componenttest-enabled))
       - task: codecoverage
         file: common-ci/ci/tasks/((build-tool))/codecoverage.yml
         params:
@@ -52,6 +46,9 @@ jobs:
           SONAR_TOKEN: ((sonar-key))
       - task: publish-test-reports
         file: common-ci/ci/tasks/((build-tool))/publish-test-reports.yml
+      - put: reports
+        params:
+          repository: reports
       - put: version
         params:
           file: version/version
