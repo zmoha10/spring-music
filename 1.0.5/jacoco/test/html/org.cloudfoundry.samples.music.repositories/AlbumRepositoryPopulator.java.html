@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlbumRepositoryPopulator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-music</a> &gt; <a href="index.source.html" class="el_package">org.cloudfoundry.samples.music.repositories</a> &gt; <span class="el_source">AlbumRepositoryPopulator.java</span></div><h1>AlbumRepositoryPopulator.java</h1><pre class="source lang-java linenums">package org.cloudfoundry.samples.music.repositories;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.cloudfoundry.samples.music.domain.Album;
+import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.init.Jackson2ResourceReader;
+
+import java.util.Collection;
+
+public class AlbumRepositoryPopulator implements ApplicationListener&lt;ApplicationReadyEvent&gt; {
+    private final Jackson2ResourceReader resourceReader;
+    private final Resource sourceData;
+
+<span class="nc" id="L20">    public AlbumRepositoryPopulator() {</span>
+<span class="nc" id="L21">        ObjectMapper mapper = new ObjectMapper();</span>
+<span class="nc" id="L22">        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);</span>
+<span class="nc" id="L23">        resourceReader = new Jackson2ResourceReader(mapper);</span>
+<span class="nc" id="L24">        sourceData = new ClassPathResource(&quot;albums.json&quot;);</span>
+<span class="nc" id="L25">    }</span>
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+<span class="nc" id="L29">        CrudRepository albumRepository =</span>
+<span class="nc" id="L30">                BeanFactoryUtils.beanOfTypeIncludingAncestors(event.getApplicationContext(), CrudRepository.class);</span>
+
+<span class="nc bnc" id="L32" title="All 4 branches missed.">        if (albumRepository != null &amp;&amp; albumRepository.count() == 0) {</span>
+<span class="nc" id="L33">            populate(albumRepository);</span>
+        }
+<span class="nc" id="L35">    }</span>
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void populate(CrudRepository repository) {
+<span class="nc" id="L39">        Object entity = getEntityFromResource(sourceData);</span>
+
+<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (entity instanceof Collection) {</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            for (Album album : (Collection&lt;Album&gt;) entity) {</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">                if (album != null) {</span>
+<span class="nc" id="L44">                    repository.save(album);</span>
+                }
+<span class="nc" id="L46">            }</span>
+        } else {
+<span class="nc" id="L48">            repository.save(entity);</span>
+        }
+<span class="nc" id="L50">    }</span>
+
+    private Object getEntityFromResource(Resource resource) {
+        try {
+<span class="nc" id="L54">            return resourceReader.readFrom(resource, this.getClass().getClassLoader());</span>
+<span class="nc" id="L55">        } catch (Exception e) {</span>
+<span class="nc" id="L56">            throw new RuntimeException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
