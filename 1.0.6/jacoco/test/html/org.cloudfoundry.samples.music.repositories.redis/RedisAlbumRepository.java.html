@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RedisAlbumRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-music</a> &gt; <a href="index.source.html" class="el_package">org.cloudfoundry.samples.music.repositories.redis</a> &gt; <span class="el_source">RedisAlbumRepository.java</span></div><h1>RedisAlbumRepository.java</h1><pre class="source lang-java linenums">package org.cloudfoundry.samples.music.repositories.redis;
+
+import org.cloudfoundry.samples.music.domain.Album;
+import org.cloudfoundry.samples.music.domain.RandomIdGenerator;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+public class RedisAlbumRepository implements CrudRepository&lt;Album, String&gt; {
+    public static final String ALBUMS_KEY = &quot;albums&quot;;
+
+    private final RandomIdGenerator idGenerator;
+    private final HashOperations&lt;String, String, Album&gt; hashOps;
+
+<span class="nc" id="L20">    public RedisAlbumRepository(RedisTemplate&lt;String, Album&gt; redisTemplate) {</span>
+<span class="nc" id="L21">        this.hashOps = redisTemplate.opsForHash();</span>
+<span class="nc" id="L22">        this.idGenerator = new RandomIdGenerator();</span>
+<span class="nc" id="L23">    }</span>
+
+    @Override
+    public &lt;S extends Album&gt; S save(S album) {
+<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (album.getId() == null) {</span>
+<span class="nc" id="L28">            album.setId(idGenerator.generateId());</span>
+        }
+
+<span class="nc" id="L31">        hashOps.put(ALBUMS_KEY, album.getId(), album);</span>
+
+<span class="nc" id="L33">        return album;</span>
+    }
+
+    @Override
+    public &lt;S extends Album&gt; Iterable&lt;S&gt; saveAll(Iterable&lt;S&gt; albums) {
+<span class="nc" id="L38">        List&lt;S&gt; result = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        for (S entity : albums) {</span>
+<span class="nc" id="L41">            save(entity);</span>
+<span class="nc" id="L42">            result.add(entity);</span>
+<span class="nc" id="L43">        }</span>
+
+<span class="nc" id="L45">        return result;</span>
+    }
+
+    @Override
+    public Optional&lt;Album&gt; findById(String id) {
+<span class="nc" id="L50">        return Optional.of(hashOps.get(ALBUMS_KEY, id));</span>
+    }
+
+    @Override
+    public boolean existsById(String id) {
+<span class="nc" id="L55">        return hashOps.hasKey(ALBUMS_KEY, id);</span>
+    }
+
+    @Override
+    public Iterable&lt;Album&gt; findAll() {
+<span class="nc" id="L60">        return hashOps.values(ALBUMS_KEY);</span>
+    }
+
+    @Override
+    public Iterable&lt;Album&gt; findAllById(Iterable&lt;String&gt; ids) {
+<span class="nc" id="L65">        return hashOps.multiGet(ALBUMS_KEY, convertIterableToList(ids));</span>
+    }
+
+    @Override
+    public long count() {
+<span class="nc" id="L70">        return hashOps.keys(ALBUMS_KEY).size();</span>
+    }
+
+    @Override
+    public void deleteById(String id) {
+<span class="nc" id="L75">        hashOps.delete(ALBUMS_KEY, id);</span>
+<span class="nc" id="L76">    }</span>
+
+    @Override
+    public void delete(Album album) {
+<span class="nc" id="L80">        hashOps.delete(ALBUMS_KEY, album.getId());</span>
+<span class="nc" id="L81">    }</span>
+
+    @Override
+    public void deleteAll(Iterable&lt;? extends Album&gt; albums) {
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        for (Album album : albums) {</span>
+<span class="nc" id="L86">            delete(album);</span>
+<span class="nc" id="L87">        }</span>
+<span class="nc" id="L88">    }</span>
+
+    @Override
+    public void deleteAll() {
+<span class="nc" id="L92">        Set&lt;String&gt; ids = hashOps.keys(ALBUMS_KEY);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        for (String id : ids) {</span>
+<span class="nc" id="L94">            deleteById(id);</span>
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">    }</span>
+
+    private &lt;T&gt; List&lt;T&gt; convertIterableToList(Iterable&lt;T&gt; iterable) {
+<span class="nc" id="L99">        List&lt;T&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (T object : iterable) {</span>
+<span class="nc" id="L101">            list.add(object);</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">        return list;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
