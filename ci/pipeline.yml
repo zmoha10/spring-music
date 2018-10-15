@@ -48,7 +48,7 @@ jobs:
         file: common-ci/ci/tasks/((build-tool))/publish-test-reports.yml
       - put: reports
         params:
-          repository: reports
+          repository: reports-updates
       - put: version
         params:
           file: version/version
