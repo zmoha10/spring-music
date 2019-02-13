@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "stringToTest": {
+            "type": "string",
+            "defaultValue": "OneTwoThree"
+        },
+        "objectToTest": {
+            "type": "object",
+            "defaultValue": [
+              {
+                "name": "customer-profile",
+                "throughput": 400,
+                "ttl": -1,
+                "sharedKey": [
+                  "/aggregateId"
+                ],
+                "uniqueKey": [
+                  "/_id"
+                ]
+              },
+              {
+                "name": "test",
+                "throughput": 1000,
+                "ttl": -1,
+                "sharedKey": [
+                  "/aggregateId"
+                ],
+                "uniqueKey": [
+                  "/_id"
+                ]
+              }
+            ]
+        },
+        "arrayToTest": {
+            "type": "array",
+            "defaultValue": ["one", "two", "three"]
+        }
+    },
+    "resources": [
+    ],
+    "outputs": {
+        "stringTrue": {
+            "type": "bool",
+            "value": "[contains(parameters('stringToTest'), 'e')]"
+        },
+        "stringFalse": {
+            "type": "bool",
+            "value": "[contains(parameters('stringToTest'), 'z')]"
+        },
+        "arrayTrue": {
+            "type": "bool",
+            "value": "[contains(parameters('arrayToTest'), 'three')]"
+        },
+        "arrayFalse": {
+            "type": "bool",
+            "value": "[contains(parameters('arrayToTest'), 'four')]"
+        },
+        "objectToString": {
+            "type": "string",
+            "value": "[string(parameters('objectToTest'))]"
+        }
+    }
+}
