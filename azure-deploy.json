@@ -74,7 +74,7 @@
         },
         "objectToString": {
             "type": "string",
-            "value": "[parameters('testString')]"
+            "value": "[variables('testString')]"
         }
     }
 }
