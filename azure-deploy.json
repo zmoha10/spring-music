@@ -7,7 +7,7 @@
             "defaultValue": "OneTwoThree"
         },
         "objectToTest": {
-            "type": "object",
+            "type": "array",
             "defaultValue": [
               {
                 "name": "customer-profile",
