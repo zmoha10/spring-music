@@ -7,7 +7,7 @@
             "defaultValue": "OneTwoThree"
         },
         "objectToTest": {
-            "type": "array",
+            "type": "object",
             "defaultValue": [
               {
                 "name": "customer-profile",
@@ -51,7 +51,7 @@
         }
     },
     "variables": {
-      "testString": "[json(string(parameters('objectToTest')))]"
+      "testString": "[string(parameters('objectToTest')).replace('\"','\\\"').replace('\\','\\\\')]"
     },
     "resources": [
     ],
@@ -73,8 +73,8 @@
             "value": "[contains(parameters('arrayToTest'), 'four')]"
         },
         "objectToString": {
-            "type": "array",
-            "value": "[variables('testString')]"
+            "type": "string",
+            "value": "[parameters('testString')]"
         }
     }
 }
