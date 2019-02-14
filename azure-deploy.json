@@ -52,7 +52,7 @@
         }
     },
     "variables": {
-      "testString": "[string(parameters('objectToTest')).replace('\"','\\\"').replace('\\','\\\\')]"
+      "testString": "[replace(replace(string(parameters('objectToTest')),'\\','\\\\'),'\"','\\\"')]"
     },
     "resources": [
     ],
