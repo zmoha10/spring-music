@@ -51,7 +51,7 @@
         }
     },
     "variables": {
-      "testString": "[string(json(parameters('objectToTest')))]"
+      "testString": "[json(string(parameters('objectToTest')))]"
     },
     "resources": [
     ],
