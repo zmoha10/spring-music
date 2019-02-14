@@ -73,7 +73,7 @@
             "value": "[contains(parameters('arrayToTest'), 'four')]"
         },
         "objectToString": {
-            "type": "object",
+            "type": "json",
             "value": "[variables('testString')]"
         }
     }
